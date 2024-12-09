@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch API Example</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Cart Products</h2>
+        <div id="result" class="row">
+            
+        </div>
+    </div>
+
+    <script>
+        
+        const api = new XMLHttpRequest();
+
+        api.open("GET", "https://dummyjson.com/carts", true);
+
+        api.send();
+
+        api.onreadystatechange = () => {
+            if (api.readyState === 4) {
+                if (api.status >= 200 && api.status < 300) {
+
+                    const response = JSON.parse(api.responseText);
+                    console.log(response);
+
+                    const carts = response.carts;
+                    const result = document.getElementById("result");
+                    
+                    result.innerHTML = "";
+
+
+                    carts.forEach(cart => {
+                        const cartDiv = document.createElement('div');
+                        cartDiv.classList.add('col-12', 'mb-4');
+                    
+                        
+                        
+                        cart.products.forEach(product => {
+                            cartDiv.innerHTML += `
+                                <div class="col-md-3">
+                                    <div class="card" style="width: 18rem;">
+                                        
+                                        <div class="card-body">
+                                            <h5 class="card-title">${product.title}</h5>
+                                            <p class="card-text">Price: $${product.price}</p>
+                                           
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+
+                        cartDiv.innerHTML += `</div>`; 
+                        result.appendChild(cartDiv); 
+                    });
+
+                } else {
+                    console.log("API call failed with status: " + api.status);
+                }
+            } else {
+                console.log("Waiting for server response...");
+            }
+        };
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
+</html>
